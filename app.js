@@ -632,5 +632,5 @@ window.addEventListener('beforeunload', () => {
 const APP_VERSION = '1.0.0';
 const BUILD_DATE = '2025-01-26';
 
-console.log(`🌙 SleepWell App v${APP_VERSION} (${BUILD_DATE})`);
+console.log(`🌙 kamin App v${APP_VERSION} (${BUILD_DATE})`);
 console.log('✨ アニメーション豊富な睡眠管理アプリへようこそ！');
