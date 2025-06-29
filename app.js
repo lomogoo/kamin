@@ -29,7 +29,7 @@ const appData = {
     {
       "area": "駅前地区",
       "pods": [
-        {"type": "エグゼクティブポッド", "price": 1800, "amenities": ["Wi-Fi", "USB充電", "アロマディフューザー", "高級寝具"], "image": "assets/pod1.png"}
+        {"type": "コンパクトポッド", "price": 1800, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod1.png"}
       ],
       "utilization": [5, 4, 3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 4],
       "shop_image": "assets/shop1.png"
@@ -37,7 +37,7 @@ const appData = {
     {
       "area": "一番町周辺地区",
       "pods": [
-        {"type": "リラックスポッド", "price": 1200, "amenities": ["自然音BGM", "調光ライト", "ブランケット"], "image": "assets/pod2.png"}
+        {"type": "リラックスポッド", "price": 1200, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod2.png"}
       ],
       "utilization": [2, 3, 2, 3, 4, 3, 2, 3, 4, 3, 2, 3, 4],
       "shop_image": "assets/shop2.png"
@@ -45,7 +45,7 @@ const appData = {
     {
       "area": "県庁・市役所周辺地区",
       "pods": [
-        {"type": "プライベートポッド", "price": 1500, "amenities": ["完全個室", "遮音設計", "マッサージ機能"], "image": "assets/pod3.png"}
+        {"type": "ラグジュアリーポッド", "price": 1500, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod3.png"}
       ],
       "utilization": [3, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5],
       "shop_image": "assets/shop3.png"
@@ -53,7 +53,7 @@ const appData = {
     {
       "area": "駅東地区",
       "pods": [
-        {"type": "コンパクトポッド", "price": 900, "amenities": ["コンパクト設計", "基本アメニティ"], "image": "assets/pod4.png"}
+        {"type": "エグゼクティブポッド", "price": 900, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod4.png"}
       ],
       "utilization": [1, 2, 1, 2, 3, 2, 1, 2, 3, 2, 1, 2, 3],
       "shop_image": "assets/shop4.png"
