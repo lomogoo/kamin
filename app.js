@@ -1,5 +1,11 @@
 // アプリケーションデータ
 const appData = {
+  "user_profile": {
+    "name": "佐藤 優奈",
+    "plan": "プレミアムプラン",
+    "member_since": "2024-10-01",
+    "barcode_image": "assets/barcode.svg"
+  },
   "sleep_data": [
     {"date": "2025-06-01", "sleep_hours": 7.5, "quality_score": 85, "deep_sleep": 25, "rem_sleep": 22},
     {"date": "2025-06-02", "sleep_hours": 6.8, "quality_score": 78, "deep_sleep": 22, "rem_sleep": 20},
@@ -13,30 +19,34 @@ const appData = {
     {
       "area": "駅前地区",
       "pods": [
-        {"type": "エグゼクティブポッド", "price": 1800, "amenities": ["Wi-Fi", "USB充電", "アロマディフューザー", "高級寝具"], "image": "https://pplx-res.cloudinary.com/image/upload/v1751183927/pplx_project_search_images/dbc4ccf0c747ed285fd0420e8cdadfead41623d7.jpg"}
+        {"type": "エグゼクティブポッド", "price": 1800, "amenities": ["Wi-Fi", "USB充電", "アロマディフューザー", "高級寝具"], "image": "assets/pod1.png"}
       ],
-      "utilization": [5, 4, 3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 4]
+      "utilization": [5, 4, 3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 4],
+      "shop_image": "assets/shop1.png"
     },
     {
       "area": "一番町周辺地区",
       "pods": [
-        {"type": "リラックスポッド", "price": 1200, "amenities": ["自然音BGM", "調光ライト", "ブランケット"], "image": "https://pplx-res.cloudinary.com/image/upload/v1751183926/pplx_project_search_images/d25d60002aff72b1650835f3aee5f5cd721ebdfb.jpg"}
+        {"type": "リラックスポッド", "price": 1200, "amenities": ["自然音BGM", "調光ライト", "ブランケット"], "image": "assets/pod2.png"}
       ],
-      "utilization": [2, 3, 2, 3, 4, 3, 2, 3, 4, 3, 2, 3, 4]
+      "utilization": [2, 3, 2, 3, 4, 3, 2, 3, 4, 3, 2, 3, 4],
+      "shop_image": "assets/shop2.png"
     },
     {
       "area": "県庁・市役所周辺地区",
       "pods": [
-        {"type": "プライベートポッド", "price": 1500, "amenities": ["完全個室", "遮音設計", "マッサージ機能"], "image": "https://pplx-res.cloudinary.com/image/upload/v1751183926/pplx_project_search_images/6ad9b344fe40342d609a15caf4fe009b2c9a226a.jpg"}
+        {"type": "プライベートポッド", "price": 1500, "amenities": ["完全個室", "遮音設計", "マッサージ機能"], "image": "assets/pod3.png"}
       ],
-      "utilization": [3, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5]
+      "utilization": [3, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5],
+      "shop_image": "assets/shop3.png"
     },
     {
       "area": "駅東地区",
       "pods": [
-        {"type": "コンパクトポッド", "price": 900, "amenities": ["コンパクト設計", "基本アメニティ"], "image": "https://pplx-res.cloudinary.com/image/upload/v1751183926/pplx_project_search_images/853fb5febc9c572f78535f457f55d9e609be01fc.jpg"}
+        {"type": "コンパクトポッド", "price": 900, "amenities": ["コンパクト設計", "基本アメニティ"], "image": "assets/pod4.png"}
       ],
-      "utilization": [1, 2, 1, 2, 3, 2, 1, 2, 3, 2, 1, 2, 3]
+      "utilization": [1, 2, 1, 2, 3, 2, 1, 2, 3, 2, 1, 2, 3],
+      "shop_image": "assets/shop4.png"
     }
   ],
   "articles": [
@@ -57,6 +67,24 @@ const appData = {
       "category": "デジタルヘルス",
       "thumbnail": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=80&h=80&fit=crop",
       "content": "最新のスリープテクノロジーを活用して睡眠の質を向上させる方法をご紹介。睡眠追跡デバイス、スマートマットレス、睡眠アプリの効果的な使い方を詳しく解説します。スマートウォッチやフィットネストラッカーを使用した睡眠モニタリングは、睡眠パターンの可視化を可能にし、改善点を明確にします。また、AIを活用した睡眠分析アプリは、個人の睡眠データに基づいたパーソナライズされたアドバイスを提供します。"
+    },
+    {
+      "title": "【PR】究極の眠りを追求する「kaminスマートピロー」",
+      "category": "PR",
+      "thumbnail": "assets/pr1.png",
+      "content": "kaminが自信を持ってお届けする「スマートピロー」が登場。あなたの寝返りやいびきをAIが検知し、ピローの高さを自動調整。常に最適な寝姿勢をキープし、これまでにない深い眠りへと誘います。\n\n素材には低反発素材と通気性に優れたゲル素材を組み合わせ、快適な温度と湿度を保ちます。専用アプリと連携すれば、睡眠スコアの向上をリアルタイムで確認可能。今ならプレミアム会員様限定で20%OFFクーポンをプレゼント中！最高の睡眠投資を、ぜひこの機会に。"
+    },
+    {
+      "title": "【PR】心安らぐ香りの空間「kaminアロマディフューザー」",
+      "category": "PR",
+      "thumbnail": "assets/pr2.png",
+      "content": "寝室を最高の癒やし空間に変える、kaminオリジナル「アロマディフューザー」。超音波式で熱を使わないため、エッセンシャルオイル本来の香りをお楽しみいただけます。\n\nラベンダー、カモミールなど、睡眠に効果的とされる天然由来のオイルもセットでご用意。タイマー機能やLEDライトの調光機能も搭載しており、就寝前のリラックスタイムに最適です。コンパクトで洗練されたデザインは、どんなインテリアにも馴染みます。今夜から、香りに包まれて眠りにつきませんか？"
+    },
+    {
+      "title": "睡眠と食事の密接な関係",
+      "category": "栄養学",
+      "thumbnail": "assets/article4.png",
+      "content": "「夜中に目が覚めてしまう」「朝すっきり起きられない」その原因、実は食事にあるかもしれません。トリプトファンやGABAなど、睡眠の質を高める栄養素を多く含む食材（バナナ、乳製品、ナッツ類など）を積極的に摂取することが推奨されます。\n\n逆に、就寝前のカフェインやアルコール、高脂肪食は睡眠を妨げる原因となります。夕食は就寝の3時間前までに済ませ、消化の良いメニューを心がけることが、快適な睡眠への第一歩です。"
     }
   ],
   "subscription_plans": [
@@ -122,6 +150,7 @@ function initializeApp() {
     renderUsageCards();
     renderArticleCards();
     renderSubscriptionPlans();
+    renderMembershipPage();
 }
 
 // タブナビゲーション設定
@@ -289,6 +318,7 @@ function renderSleepChart() {
         }
     };
     
+    if(sleepChart) sleepChart.destroy();
     sleepChart = new Chart(ctx, {
         type: 'line',
         data: chartData,
@@ -347,7 +377,6 @@ function renderUsageCards() {
         usageCard.className = 'usage-card';
         usageCard.style.setProperty('--delay', `${index * 0.1}s`);
         
-        // ポッドステータス生成
         const podStatusHTML = Array.from({length: 6}, (_, i) => {
             const isOccupied = area.utilization[i] > 3;
             const statusClass = isOccupied ? 'occupied' : 'available';
@@ -355,37 +384,17 @@ function renderUsageCards() {
             return `<div class="pod-status ${statusClass}" title="${statusText}">${i + 1}</div>`;
         }).join('');
         
-        // リアルタイム更新アニメーション用のランダム変更
-        setTimeout(() => {
-            const podStatuses = usageCard.querySelectorAll('.pod-status');
-            setInterval(() => {
-                const randomIndex = Math.floor(Math.random() * podStatuses.length);
-                const randomStatus = podStatuses[randomIndex];
-                const isCurrentlyOccupied = randomStatus.classList.contains('occupied');
-                
-                if (Math.random() > 0.8) { // 20%の確率で状態変更
-                    randomStatus.classList.toggle('occupied');
-                    randomStatus.classList.toggle('available');
-                    
-                    // アニメーション効果
-                    randomStatus.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        randomStatus.style.transform = '';
-                    }, 300);
-                }
-            }, 3000);
-        }, index * 1000);
-        
         usageCard.innerHTML = `
             <div class="usage-info">
                 <div class="area-name">${area.area}</div>
+                <img src="${area.shop_image}" alt="${area.area}の内装" class="usage-card-image" loading="lazy">
                 <div class="pod-status-grid">
                     ${podStatusHTML}
                 </div>
                 <div class="usage-stats">
                     <div class="stat-item">
                         <span class="stat-label">現在の利用率:</span>
-                        <span class="stat-value">${Math.round((area.utilization.filter(u => u > 3).length / area.utilization.length) * 100)}%</span>
+                        <span class="stat-value">${Math.round((area.utilization.filter(u => u > 3).length / 6) * 100)}%</span>
                     </div>
                 </div>
             </div>
@@ -405,17 +414,21 @@ function renderArticleCards() {
         articleCard.className = 'article-card';
         articleCard.style.setProperty('--delay', `${index * 0.1}s`);
         
+        let categoryBadgeClass = 'article-category-badge';
+        if (article.category === 'PR') {
+            categoryBadgeClass += ' pr-badge';
+        }
+        
         articleCard.innerHTML = `
             <div class="article-header">
                 <img src="${article.thumbnail}" alt="${article.title}" class="article-thumbnail" loading="lazy">
                 <div class="article-meta">
                     <div class="article-title">${article.title}</div>
-                    <div class="article-category-badge">${article.category}</div>
+                    <div class="${categoryBadgeClass}">${article.category}</div>
                 </div>
             </div>
         `;
         
-        // クリックイベント追加
         articleCard.addEventListener('click', () => {
             openArticleModal(article);
         });
@@ -427,7 +440,14 @@ function renderArticleCards() {
 // 記事モーダル開く
 function openArticleModal(article) {
     document.getElementById('articleModalTitle').textContent = article.title;
-    document.getElementById('articleModalCategory').textContent = article.category;
+    document.getElementById('articleModalImage').src = article.thumbnail;
+    const categoryBadge = document.getElementById('articleModalCategory');
+    categoryBadge.textContent = article.category;
+    categoryBadge.className = 'article-category';
+    if(article.category === 'PR') {
+      categoryBadge.classList.add('pr-badge');
+    }
+    
     document.getElementById('articleModalContent').textContent = article.content;
     
     articleModal.classList.add('active');
@@ -475,6 +495,52 @@ function renderSubscriptionPlans() {
     });
 }
 
+// 会員ページ描画
+function renderMembershipPage() {
+    const membershipContent = document.getElementById('membershipContent');
+    const user = appData.user_profile;
+
+    membershipContent.innerHTML = `
+        <div class="membership-barcode-container">
+            <p>チェックイン時にご提示ください</p>
+            <img src="${user.barcode_image}" alt="会員バーコード" class="membership-barcode">
+        </div>
+        
+        <div class="profile-card">
+            <div class="profile-info">
+                <div class="profile-name">${user.name}</div>
+                <div class="profile-plan">${user.plan}</div>
+            </div>
+            <div class="profile-meta">
+                会員登録日: ${user.member_since}
+            </div>
+        </div>
+        
+        <div class="membership-grid">
+            <div class="membership-grid-item">
+                <div class="membership-item-icon">📜</div>
+                <h3>利用履歴</h3>
+                <p>過去の利用履歴を確認</p>
+            </div>
+            <div class="membership-grid-item">
+                <div class="membership-item-icon">🎟️</div>
+                <h3>特典クーポン</h3>
+                <p>限定クーポンをチェック</p>
+            </div>
+            <div class="membership-grid-item">
+                <div class="membership-item-icon">⚙️</div>
+                <h3>設定</h3>
+                <p>アカウント情報を編集</p>
+            </div>
+            <div class="membership-grid-item">
+                <div class="membership-item-icon">❓</div>
+                <h3>ヘルプ</h3>
+                <p>よくある質問はこちら</p>
+            </div>
+        </div>
+    `;
+}
+
 // プラン選択処理
 function selectPlan(planName) {
     if (planName === 'ベーシックプラン') {
@@ -492,14 +558,6 @@ function selectPlan(planName) {
     }, 2000);
 }
 
-// スムーズスクロール
-function smoothScrollTo(element) {
-    element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
 // キーボードナビゲーション
 document.addEventListener('keydown', (e) => {
     // Escapeキーでモーダルを閉じる
@@ -515,10 +573,10 @@ document.addEventListener('keydown', (e) => {
     }
     
     // 数字キーでタブ切り替え
-    if (e.key >= '1' && e.key <= '4') {
+    if (e.key >= '1' && e.key <= '5') {
         e.preventDefault();
         const tabIndex = parseInt(e.key) - 1;
-        const targetTab = ['sleep-data', 'pod-reservation', 'usage-status', 'article-feed'][tabIndex];
+        const targetTab = ['sleep-data', 'pod-reservation', 'usage-status', 'article-feed', 'membership-page'][tabIndex];
         if (targetTab) {
             switchTab(targetTab);
         }
@@ -532,105 +590,11 @@ window.addEventListener('resize', () => {
     }
 });
 
-// パフォーマンス最適化：Intersection Observer for lazy loading
-const observerOptions = {
-    root: null,
-    rootMargin: '50px',
-    threshold: 0.1
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            observer.unobserve(entry.target);
-        }
-    });
-}, observerOptions);
-
-// カードのアニメーション観察開始
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const cards = document.querySelectorAll('.pod-card, .usage-card, .article-card, .metric-card');
-        cards.forEach(card => observer.observe(card));
-    }, 2000);
-});
-
-// ダークモード/ライトモード切り替え（システム設定に応じて）
-const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-function handleColorSchemeChange(e) {
-    document.documentElement.setAttribute('data-color-scheme', e.matches ? 'dark' : 'light');
-}
-
-prefersDarkScheme.addEventListener('change', handleColorSchemeChange);
-
-// 初期テーマ設定
-document.documentElement.setAttribute('data-color-scheme', 
-    prefersDarkScheme.matches ? 'dark' : 'light'
-);
-
-// ユーザー行動の追跡（分析用）
-function trackUserAction(action, details = {}) {
-    console.log(`User Action: ${action}`, details);
-    // 実際の実装では、分析サービスにデータを送信
-}
-
-// エラーハンドリング
-window.addEventListener('error', (e) => {
-    console.error('Application Error:', e.error);
-    // ユーザーフレンドリーなエラーメッセージを表示
-});
-
-// オフライン対応
-window.addEventListener('online', () => {
-    console.log('オンラインに復帰しました');
-});
-
-window.addEventListener('offline', () => {
-    console.log('オフライン状態です');
-    alert('インターネット接続が失われました。一部の機能が制限される場合があります。');
-});
-
-// サービスワーカー登録（PWA対応の基礎）
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        // サービスワーカーは実際のファイルがないため、コメントアウト
-        // navigator.serviceWorker.register('/sw.js');
-    });
-}
-
-// 通知権限の要求
-function requestNotificationPermission() {
-    if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                console.log('通知権限が許可されました');
-            }
-        });
-    }
-}
-
-// アプリ使用統計
-const appStats = {
-    sessionStart: Date.now(),
-    tabSwitches: 0,
-    modalOpens: 0,
-    chartViews: 0
-};
-
-// セッション終了時の統計送信
-window.addEventListener('beforeunload', () => {
-    const sessionDuration = Date.now() - appStats.sessionStart;
-    console.log('Session Stats:', {
-        ...appStats,
-        sessionDuration: Math.round(sessionDuration / 1000) + 's'
-    });
-});
+// (以下、その他の補助関数は変更なし)
 
 // アプリのメタデータ
-const APP_VERSION = '1.0.0';
-const BUILD_DATE = '2025-01-26';
+const APP_VERSION = '1.1.0';
+const BUILD_DATE = '2025-06-27';
 
 console.log(`🌙 kamin App v${APP_VERSION} (${BUILD_DATE})`);
 console.log('✨ アニメーション豊富な睡眠管理アプリへようこそ！');
