@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
+    <!-- 星と雲のアニメーション背景 -->
     <div class="starry-background">
         <div class="stars"></div>
         <div class="clouds">
@@ -18,7 +19,9 @@
         </div>
     </div>
 
+    <!-- メインアプリ -->
     <div class="app-container">
+        <!-- ヘッダー -->
         <header class="app-header">
             <div class="header-content">
                 <h1 class="app-title">
@@ -31,6 +34,7 @@
             </div>
         </header>
 
+        <!-- タブナビゲーション -->
         <nav class="tab-navigation">
             <button class="tab-btn active" data-tab="sleep-data">
                 <span class="tab-icon">📊</span>
@@ -54,26 +58,125 @@
             </button>
         </nav>
 
+        <!-- メインコンテンツ -->
         <main class="main-content">
-            <section class="tab-content active" id="sleep-data"></section>
-            <section class="tab-content" id="pod-reservation"></section>
-            <section class="tab-content" id="usage-status"></section>
-            <section class="tab-content" id="article-feed"></section>
+            <!-- 睡眠データ分析画面 -->
+            <section class="tab-content active" id="sleep-data">
+                <div class="content-header">
+                    <h2>睡眠データ分析</h2>
+                    <p>過去30日間の睡眠パターンを確認しましょう</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+                <div class="sleep-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">⏰</div>
+                        <div class="metric-info">
+                            <h3>平均睡眠時間</h3>
+                            <span class="metric-value">7.4時間</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">⭐</div>
+                        <div class="metric-info">
+                            <h3>睡眠の質</h3>
+                            <span class="metric-value">85点</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🌙</div>
+                        <div class="metric-info">
+                            <h3>深い眠り</h3>
+                            <span class="metric-value">25%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ポッド予約画面 -->
+            <section class="tab-content" id="pod-reservation">
+                <div class="content-header">
+                    <h2>睡眠ポッド予約</h2>
+                    <p>仙台市内4エリアから最適なポッドを選択してください</p>
+                </div>
+                <div class="pod-grid" id="podGrid">
+                    <!-- ポッドカードがJavaScriptで動的に生成されます -->
+                </div>
+            </section>
+
+            <!-- 利用状況表示画面 -->
+            <section class="tab-content" id="usage-status">
+                <div class="content-header">
+                    <h2>リアルタイム利用状況</h2>
+                    <p>各エリアの現在の利用状況をご確認ください</p>
+                </div>
+                <div class="usage-grid" id="usageGrid">
+                    <!-- 利用状況カードがJavaScriptで動的に生成されます -->
+                </div>
+            </section>
+
+            <!-- 記事フィード画面 -->
+            <section class="tab-content" id="article-feed">
+                <div class="content-header">
+                    <h2>睡眠改善記事</h2>
+                    <p>専門家が厳選した睡眠とヘルスケアに関する記事</p>
+                </div>
+                <div class="article-grid" id="articleGrid">
+                    <!-- 記事カードがJavaScriptで動的に生成されます -->
+                </div>
+            </section>
+            
+            <!-- 会員ページ画面 -->
             <section class="tab-content" id="membership-page">
                 <div class="content-header">
                     <h2>会員ページ</h2>
                     <p>会員情報と便利な機能をご利用いただけます</p>
                 </div>
                 <div id="membershipContent">
-                    </div>
+                    <!-- 会員情報がJavaScriptで動的に生成されます -->
+                </div>
             </section>
         </main>
     </div>
 
-    <div class="modal-overlay" id="subscriptionModal"></div>
+    <!-- 各種モーダルウィンドウ -->
 
-    <div class="modal-overlay" id="articleModal"></div>
+    <!-- サブスクリプションモーダル -->
+    <div class="modal-overlay" id="subscriptionModal">
+        <div class="modal-content subscription-modal">
+            <div class="modal-header">
+                <h2>✨ プレミアムプランに参加</h2>
+                <button class="modal-close" data-modal-id="subscriptionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="trial-banner">
+                    <span class="trial-icon">🎁</span>
+                    <span>7日間無料トライアル開始</span>
+                </div>
+                <div class="plans-grid" id="plansGrid">
+                    <!-- プランカードがJavaScriptで動的に生成されます -->
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- 記事詳細モーダル -->
+    <div class="modal-overlay" id="articleModal">
+        <div class="modal-content article-modal">
+            <div class="modal-header">
+                <h2 id="articleModalTitle"></h2>
+                <button class="modal-close" data-modal-id="articleModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="articleModalImage" src="" alt="記事ヘッダー画像" class="article-modal-header-image">
+                <div class="article-category" id="articleModalCategory"></div>
+                <div class="article-content" id="articleModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 予約確認モーダル -->
     <div class="modal-overlay" id="reservationModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -81,10 +184,12 @@
                 <button class="modal-close" data-modal-id="reservationModal">&times;</button>
             </div>
             <div class="modal-body" id="reservationModalBody">
-                </div>
+                <!-- 予約内容がJavaScriptで動的に生成されます -->
+            </div>
         </div>
     </div>
 
+    <!-- 利用履歴モーダル -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -92,10 +197,12 @@
                 <button class="modal-close" data-modal-id="historyModal">&times;</button>
             </div>
             <div class="modal-body" id="historyModalBody">
-                </div>
+                <!-- 利用履歴がJavaScriptで動的に生成されます -->
+            </div>
         </div>
     </div>
     
+    <!-- クーポンモーダル -->
     <div class="modal-overlay" id="couponModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -103,10 +210,12 @@
                 <button class="modal-close" data-modal-id="couponModal">&times;</button>
             </div>
             <div class="modal-body" id="couponModalBody">
-                </div>
+                <!-- クーポン情報がJavaScriptで動的に生成されます -->
+            </div>
         </div>
     </div>
 
+    <!-- 設定モーダル -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -135,6 +244,7 @@
         </div>
     </div>
     
+    <!-- ヘルプモーダル -->
     <div class="modal-overlay" id="helpModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -159,7 +269,13 @@
     </div>
 
 
-    <div class="loading-overlay" id="loadingOverlay"></div>
+    <!-- ローディングアニメーション -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner-circle"></div>
+            <p>データを読み込み中...</p>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
