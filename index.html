@@ -1,567 +1,593 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, BarChart3, BookOpen, TrendingUp, Star, Battery, Moon, Sun, ChevronRight, Plus, Filter } from 'lucide-react';
-
-const DreamPodApp = () => {
-  const [activeTab, setActiveTab] = useState('home');
-  const [selectedPod, setSelectedPod] = useState(null);
-  const [sleepScore, setSleepScore] = useState(85);
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // 睡眠ポッドのダミーデータ
-  const pods = [
-    { id: 1, name: 'DreamPod 仙台駅前', address: '青葉区中央1-1-1', available: 3, total: 5, distance: '250m', rating: 4.8, price: '¥2,500/h' },
-    { id: 2, name: 'DreamPod 一番町', address: '青葉区一番町3-3-3', available: 1, total: 3, distance: '500m', rating: 4.9, price: '¥2,200/h' },
-    { id: 3, name: 'DreamPod 定禅寺通', address: '青葉区国分町2-2-2', available: 5, total: 8, distance: '800m', rating: 4.7, price: '¥2,800/h' },
-    { id: 4, name: 'DreamPod 勾当台', address: '青葉区本町2-16-1', available: 2, total: 4, distance: '1.2km', rating: 4.6, price: '¥2,300/h' }
-  ];
-
-  // 睡眠記事のダミーデータ
-  const articles = [
-    { id: 1, title: '最適な睡眠サイクルを見つける方法', category: 'サイエンス', readTime: '5分', image: '🧬' },
-    { id: 2, title: '睡眠の質を高める5つの習慣', category: 'ライフスタイル', readTime: '3分', image: '✨' },
-    { id: 3, title: '仙台の新しい睡眠カルチャー', category: 'トレンド', readTime: '4分', image: '🌙', sponsored: true }
-  ];
-
-  const HomeTab = () => (
-    <div className="min-h-screen pb-20">
-      {/* ヘッダー */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-white/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">おはよう、田中さん</h1>
-              <p className="text-sm text-gray-600 mt-1">今日も良い睡眠を</p>
-            </div>
-            <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-                T
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="pt-24 px-6">
-        {/* 睡眠スコアカード */}
-        <div className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-6 mb-6 shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white text-lg font-semibold">昨夜の睡眠スコア</h2>
-            <Moon className="text-white/80 w-5 h-5" />
-          </div>
-          <div className="flex items-end justify-between">
-            <div>
-              <div className="text-5xl font-bold text-white mb-2">{sleepScore}</div>
-              <div className="text-white/80 text-sm">前日比 +5ポイント</div>
-            </div>
-            <div className="w-32 h-32 relative">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="64"
-                  cy="64"
-                  r="56"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.2)"
-                  strokeWidth="12"
-                />
-                <circle
-                  cx="64"
-                  cy="64"
-                  r="56"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="12"
-                  strokeDasharray={`${(sleepScore / 100) * 352} 352`}
-                  className="transition-all duration-1000 ease-out"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-white text-sm">睡眠時間</div>
-                  <div className="text-white text-xl font-bold">7h 32m</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
-              <div className="text-white/80 text-xs">深い睡眠</div>
-              <div className="text-white font-semibold">2h 15m</div>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
-              <div className="text-white/80 text-xs">レム睡眠</div>
-              <div className="text-white font-semibold">1h 48m</div>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
-              <div className="text-white/80 text-xs">覚醒回数</div>
-              <div className="text-white font-semibold">2回</div>
-            </div>
-          </div>
-        </div>
-
-        {/* クイックアクション */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <button 
-            onClick={() => setActiveTab('pods')}
-            className="bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <MapPin className="w-6 h-6 text-purple-500" />
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-            </div>
-            <div className="text-left">
-              <h3 className="font-semibold text-gray-900">ポッドを予約</h3>
-              <p className="text-xs text-gray-600 mt-1">近くで3件利用可能</p>
-            </div>
-          </button>
-          
-          <button className="bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <div className="flex items-center justify-between mb-3">
-              <TrendingUp className="w-6 h-6 text-blue-500" />
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-            </div>
-            <div className="text-left">
-              <h3 className="font-semibold text-gray-900">週間レポート</h3>
-              <p className="text-xs text-gray-600 mt-1">睡眠傾向を分析</p>
-            </div>
-          </button>
-        </div>
-
-        {/* 睡眠改善のヒント */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-5 mb-6">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-            <Sun className="w-5 h-5 mr-2 text-yellow-500" />
-            今日の睡眠改善ヒント
-          </h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            昨夜の睡眠データから、就寝前のブルーライトが睡眠の質に影響している可能性があります。今夜は就寝1時間前からスマートフォンの使用を控えてみましょう。
-          </p>
-        </div>
-
-        {/* おすすめ記事 */}
-        <div>
-          <h3 className="font-semibold text-gray-900 mb-4 flex items-center justify-between">
-            <span className="flex items-center">
-              <BookOpen className="w-5 h-5 mr-2 text-purple-500" />
-              おすすめ記事
-            </span>
-            <button 
-              onClick={() => setActiveTab('feed')}
-              className="text-sm text-purple-500 hover:text-purple-600"
-            >
-              すべて見る
-            </button>
-          </h3>
-          <div className="space-y-3">
-            {articles.slice(0, 2).map(article => (
-              <div key={article.id} className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl flex items-center justify-center text-2xl">
-                    {article.image}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{article.title}</h4>
-                    <div className="flex items-center space-x-3 mt-2 text-xs text-gray-500">
-                      <span>{article.category}</span>
-                      <span>•</span>
-                      <span>{article.readTime}</span>
-                      {article.sponsored && (
-                        <>
-                          <span>•</span>
-                          <span className="text-purple-500">広告</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const PodsTab = () => (
-    <div className="min-h-screen pb-20">
-      <div className="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 py-4 border-b border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900">睡眠ポッド</h2>
-        <p className="text-sm text-gray-600 mt-1">仙台エリアで利用可能</p>
-      </div>
-
-      <div className="px-6 py-4">
-        {/* フィルター */}
-        <div className="flex items-center space-x-2 mb-6 overflow-x-auto pb-2">
-          <button className="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-medium whitespace-nowrap">
-            すべて
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors">
-            空き有り
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors">
-            駅近
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors">
-            高評価
-          </button>
-        </div>
-
-        {/* ポッドリスト */}
-        <div className="space-y-4">
-          {pods.map((pod, index) => (
-            <div
-              key={pod.id}
-              className="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                animation: 'slideInUp 0.5s ease-out forwards'
-              }}
-              onClick={() => setSelectedPod(pod)}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-semibold text-gray-900 text-lg">{pod.name}</h3>
-                  <p className="text-sm text-gray-600 mt-1 flex items-center">
-                    <MapPin className="w-3 h-3 mr-1" />
-                    {pod.address}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center text-yellow-500">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="ml-1 text-sm font-medium text-gray-900">{pod.rating}</span>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">{pod.distance}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
-                    <Battery className={`w-5 h-5 ${pod.available > 0 ? 'text-green-500' : 'text-red-500'}`} />
-                    <span className="ml-2 text-sm font-medium">
-                      {pod.available}/{pod.total} 空き
-                    </span>
-                  </div>
-                  <div className="text-sm font-medium text-purple-600">
-                    {pod.price}
-                  </div>
-                </div>
-                <button className="px-4 py-2 bg-purple-500 text-white rounded-xl text-sm font-medium hover:bg-purple-600 transition-colors">
-                  予約する
-                </button>
-              </div>
-
-              {/* 空き状況バー */}
-              <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
-                  style={{ width: `${(pod.available / pod.total) * 100}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const DataTab = () => (
-    <div className="min-h-screen pb-20">
-      <div className="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 py-4 border-b border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900">睡眠データ</h2>
-        <p className="text-sm text-gray-600 mt-1">詳細な分析とトレンド</p>
-      </div>
-
-      <div className="px-6 py-4">
-        {/* 週間サマリー */}
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-5 mb-6">
-          <h3 className="font-semibold text-gray-900 mb-4">週間サマリー</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-600">平均睡眠時間</p>
-              <p className="text-2xl font-bold text-gray-900">7h 15m</p>
-              <p className="text-xs text-green-600 mt-1">+12分 先週比</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">平均スコア</p>
-              <p className="text-2xl font-bold text-gray-900">82</p>
-              <p className="text-xs text-green-600 mt-1">+3 先週比</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 睡眠グラフ */}
-        <div className="bg-white rounded-2xl p-5 shadow-lg mb-6">
-          <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
-            <BarChart3 className="w-5 h-5 mr-2 text-purple-500" />
-            今週の睡眠時間
-          </h3>
-          <div className="space-y-3">
-            {['月', '火', '水', '木', '金', '土', '日'].map((day, index) => {
-              const hours = Math.random() * 3 + 6;
-              return (
-                <div key={day} className="flex items-center space-x-3">
-                  <span className="text-sm font-medium text-gray-600 w-8">{day}</span>
-                  <div className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden relative">
-                    <div 
-                      className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000"
-                      style={{ 
-                        width: `${(hours / 10) * 100}%`,
-                        animationDelay: `${index * 100}ms`,
-                        animation: 'slideInLeft 0.8s ease-out forwards'
-                      }}
-                    />
-                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs font-medium text-gray-700">
-                      {hours.toFixed(1)}h
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 睡眠の質の内訳 */}
-        <div className="bg-white rounded-2xl p-5 shadow-lg">
-          <h3 className="font-semibold text-gray-900 mb-4">睡眠ステージ分析</h3>
-          <div className="space-y-4">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">深い睡眠</span>
-                <span className="text-sm font-medium text-purple-600">28%</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-purple-500 rounded-full" style={{ width: '28%' }} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">レム睡眠</span>
-                <span className="text-sm font-medium text-blue-600">22%</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500 rounded-full" style={{ width: '22%' }} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">浅い睡眠</span>
-                <span className="text-sm font-medium text-pink-600">50%</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-pink-500 rounded-full" style={{ width: '50%' }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const FeedTab = () => (
-    <div className="min-h-screen pb-20">
-      <div className="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 py-4 border-b border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900">睡眠フィード</h2>
-        <p className="text-sm text-gray-600 mt-1">最新の記事とヒント</p>
-      </div>
-
-      <div className="px-6 py-4">
-        {/* カテゴリータブ */}
-        <div className="flex items-center space-x-2 mb-6 overflow-x-auto pb-2">
-          <button className="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-medium whitespace-nowrap">
-            すべて
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
-            サイエンス
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
-            ライフスタイル
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
-            トレンド
-          </button>
-        </div>
-
-        {/* 記事リスト */}
-        <div className="space-y-4">
-          {[...articles, 
-            { id: 4, title: '睡眠と運動の関係性', category: 'サイエンス', readTime: '6分', image: '🏃' },
-            { id: 5, title: '理想的な寝室環境の作り方', category: 'ライフスタイル', readTime: '4分', image: '🏠' },
-            { id: 6, title: '睡眠不足が与える経済的影響', category: 'ビジネス', readTime: '7分', image: '💰' }
-          ].map((article, index) => (
-            <div
-              key={article.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                animation: 'slideInUp 0.5s ease-out forwards'
-              }}
-            >
-              <div className="h-32 bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center text-5xl">
-                {article.image}
-              </div>
-              <div className="p-5">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-gray-900 text-lg flex-1">{article.title}</h3>
-                  {article.sponsored && (
-                    <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-600 text-xs font-medium rounded-full">
-                      広告
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center space-x-3 text-sm text-gray-500">
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">{article.category}</span>
-                  <span>{article.readTime}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'home': return <HomeTab />;
-      case 'pods': return <PodsTab />;
-      case 'data': return <DataTab />;
-      case 'feed': return <FeedTab />;
-      default: return <HomeTab />;
-    }
-  };
-
-  return (
-    <div className="bg-gray-50 min-h-screen font-sans">
-      <style jsx>{`
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamPod - 睡眠ウェルビーイングアプリ</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
         @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         @keyframes slideInLeft {
-          from {
-            width: 0;
-          }
-          to {
-            width: inherit;
-          }
+            from {
+                width: 0;
+            }
+            to {
+                width: inherit;
+            }
         }
-      `}</style>
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Calendar, Clock, MapPin, BarChart3, BookOpen, TrendingUp, Star, Battery, Moon, Sun, ChevronRight, Plus, Filter } = lucide;
 
-      {renderContent()}
+        const DreamPodApp = () => {
+            const [activeTab, setActiveTab] = useState('home');
+            const [selectedPod, setSelectedPod] = useState(null);
+            const [sleepScore, setSleepScore] = useState(85);
+            const [scrollY, setScrollY] = useState(0);
 
-      {/* ボトムナビゲーション */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-        <div className="flex items-center justify-around py-2">
-          <button
-            onClick={() => setActiveTab('home')}
-            className={`flex flex-col items-center p-2 transition-all duration-300 ${
-              activeTab === 'home' ? 'text-purple-500' : 'text-gray-400'
-            }`}
-          >
-            <Moon className="w-6 h-6" />
-            <span className="text-xs mt-1">ホーム</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('pods')}
-            className={`flex flex-col items-center p-2 transition-all duration-300 ${
-              activeTab === 'pods' ? 'text-purple-500' : 'text-gray-400'
-            }`}
-          >
-            <MapPin className="w-6 h-6" />
-            <span className="text-xs mt-1">ポッド</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('data')}
-            className={`flex flex-col items-center p-2 transition-all duration-300 ${
-              activeTab === 'data' ? 'text-purple-500' : 'text-gray-400'
-            }`}
-          >
-            <BarChart3 className="w-6 h-6" />
-            <span className="text-xs mt-1">データ</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('feed')}
-            className={`flex flex-col items-center p-2 transition-all duration-300 ${
-              activeTab === 'feed' ? 'text-purple-500' : 'text-gray-400'
-            }`}
-          >
-            <BookOpen className="w-6 h-6" />
-            <span className="text-xs mt-1">フィード</span>
-          </button>
-        </div>
-      </div>
+            useEffect(() => {
+                const handleScroll = () => setScrollY(window.scrollY);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
 
-      {/* ポッド詳細モーダル */}
-      {selectedPod && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-end"
-          onClick={() => setSelectedPod(null)}
-        >
-          <div 
-            className="bg-white rounded-t-3xl p-6 w-full max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedPod.name}</h3>
-            <p className="text-gray-600 mb-4">{selectedPod.address}</p>
-            
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-500">{selectedPod.available}</div>
-                <div className="text-sm text-gray-600">空きポッド</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{selectedPod.rating}</div>
-                <div className="text-sm text-gray-600">評価</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{selectedPod.price}</div>
-                <div className="text-sm text-gray-600">料金</div>
-              </div>
-            </div>
+            // アイコンコンポーネント
+            const Icon = ({ icon: IconComponent, className }) => {
+                const IconElement = lucide[IconComponent.name];
+                return React.createElement(IconElement, { className });
+            };
 
-            <div className="space-y-4 mb-6">
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">設備</h4>
-                <div className="flex flex-wrap gap-2">
-                  {['快眠マットレス', 'ノイズキャンセリング', 'アロマセラピー', '温度調整', 'Wi-Fi'].map(facility => (
-                    <span key={facility} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
-                      {facility}
-                    </span>
-                  ))}
+            // 睡眠ポッドのダミーデータ
+            const pods = [
+                { id: 1, name: 'DreamPod 仙台駅前', address: '青葉区中央1-1-1', available: 3, total: 5, distance: '250m', rating: 4.8, price: '¥2,500/h' },
+                { id: 2, name: 'DreamPod 一番町', address: '青葉区一番町3-3-3', available: 1, total: 3, distance: '500m', rating: 4.9, price: '¥2,200/h' },
+                { id: 3, name: 'DreamPod 定禅寺通', address: '青葉区国分町2-2-2', available: 5, total: 8, distance: '800m', rating: 4.7, price: '¥2,800/h' },
+                { id: 4, name: 'DreamPod 勾当台', address: '青葉区本町2-16-1', available: 2, total: 4, distance: '1.2km', rating: 4.6, price: '¥2,300/h' }
+            ];
+
+            // 睡眠記事のダミーデータ
+            const articles = [
+                { id: 1, title: '最適な睡眠サイクルを見つける方法', category: 'サイエンス', readTime: '5分', image: '🧬' },
+                { id: 2, title: '睡眠の質を高める5つの習慣', category: 'ライフスタイル', readTime: '3分', image: '✨' },
+                { id: 3, title: '仙台の新しい睡眠カルチャー', category: 'トレンド', readTime: '4分', image: '🌙', sponsored: true }
+            ];
+
+            const HomeTab = () => (
+                <div className="min-h-screen pb-20">
+                    {/* ヘッダー */}
+                    <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-white/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
+                        <div className="px-6 py-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h1 className="text-2xl font-bold text-gray-900">おはよう、田中さん</h1>
+                                    <p className="text-sm text-gray-600 mt-1">今日も良い睡眠を</p>
+                                </div>
+                                <div className="relative">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                                        T
+                                    </div>
+                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="pt-24 px-6">
+                        {/* 睡眠スコアカード */}
+                        <div className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-6 mb-6 shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-white text-lg font-semibold">昨夜の睡眠スコア</h2>
+                                <Icon icon={Moon} className="text-white/80 w-5 h-5" />
+                            </div>
+                            <div className="flex items-end justify-between">
+                                <div>
+                                    <div className="text-5xl font-bold text-white mb-2">{sleepScore}</div>
+                                    <div className="text-white/80 text-sm">前日比 +5ポイント</div>
+                                </div>
+                                <div className="w-32 h-32 relative">
+                                    <svg className="w-full h-full transform -rotate-90">
+                                        <circle
+                                            cx="64"
+                                            cy="64"
+                                            r="56"
+                                            fill="none"
+                                            stroke="rgba(255,255,255,0.2)"
+                                            strokeWidth="12"
+                                        />
+                                        <circle
+                                            cx="64"
+                                            cy="64"
+                                            r="56"
+                                            fill="none"
+                                            stroke="white"
+                                            strokeWidth="12"
+                                            strokeDasharray={`${(sleepScore / 100) * 352} 352`}
+                                            className="transition-all duration-1000 ease-out"
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="text-center">
+                                            <div className="text-white text-sm">睡眠時間</div>
+                                            <div className="text-white text-xl font-bold">7h 32m</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4 mt-6">
+                                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                                    <div className="text-white/80 text-xs">深い睡眠</div>
+                                    <div className="text-white font-semibold">2h 15m</div>
+                                </div>
+                                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                                    <div className="text-white/80 text-xs">レム睡眠</div>
+                                    <div className="text-white font-semibold">1h 48m</div>
+                                </div>
+                                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                                    <div className="text-white/80 text-xs">覚醒回数</div>
+                                    <div className="text-white font-semibold">2回</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* クイックアクション */}
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                            <button 
+                                onClick={() => setActiveTab('pods')}
+                                className="bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                            >
+                                <div className="flex items-center justify-between mb-3">
+                                    <Icon icon={MapPin} className="w-6 h-6 text-purple-500" />
+                                    <Icon icon={ChevronRight} className="w-4 h-4 text-gray-400" />
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-gray-900">ポッドを予約</h3>
+                                    <p className="text-xs text-gray-600 mt-1">近くで3件利用可能</p>
+                                </div>
+                            </button>
+                            
+                            <button className="bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                                <div className="flex items-center justify-between mb-3">
+                                    <Icon icon={TrendingUp} className="w-6 h-6 text-blue-500" />
+                                    <Icon icon={ChevronRight} className="w-4 h-4 text-gray-400" />
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-gray-900">週間レポート</h3>
+                                    <p className="text-xs text-gray-600 mt-1">睡眠傾向を分析</p>
+                                </div>
+                            </button>
+                        </div>
+
+                        {/* 睡眠改善のヒント */}
+                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-5 mb-6">
+                            <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+                                <Icon icon={Sun} className="w-5 h-5 mr-2 text-yellow-500" />
+                                今日の睡眠改善ヒント
+                            </h3>
+                            <p className="text-sm text-gray-700 leading-relaxed">
+                                昨夜の睡眠データから、就寝前のブルーライトが睡眠の質に影響している可能性があります。今夜は就寝1時間前からスマートフォンの使用を控えてみましょう。
+                            </p>
+                        </div>
+
+                        {/* おすすめ記事 */}
+                        <div>
+                            <h3 className="font-semibold text-gray-900 mb-4 flex items-center justify-between">
+                                <span className="flex items-center">
+                                    <Icon icon={BookOpen} className="w-5 h-5 mr-2 text-purple-500" />
+                                    おすすめ記事
+                                </span>
+                                <button 
+                                    onClick={() => setActiveTab('feed')}
+                                    className="text-sm text-purple-500 hover:text-purple-600"
+                                >
+                                    すべて見る
+                                </button>
+                            </h3>
+                            <div className="space-y-3">
+                                {articles.slice(0, 2).map(article => (
+                                    <div key={article.id} className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300">
+                                        <div className="flex items-start space-x-4">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl flex items-center justify-center text-2xl">
+                                                {article.image}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-medium text-gray-900">{article.title}</h4>
+                                                <div className="flex items-center space-x-3 mt-2 text-xs text-gray-500">
+                                                    <span>{article.category}</span>
+                                                    <span>•</span>
+                                                    <span>{article.readTime}</span>
+                                                    {article.sponsored && (
+                                                        <>
+                                                            <span>•</span>
+                                                            <span className="text-purple-500">広告</span>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">営業時間</h4>
-                <p className="text-gray-600">24時間営業</p>
-              </div>
-            </div>
+            );
 
-            <button className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg hover:shadow-lg transition-all duration-300">
-              今すぐ予約する
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+            const PodsTab = () => (
+                <div className="min-h-screen pb-20">
+                    <div className="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 py-4 border-b border-gray-100">
+                        <h2 className="text-2xl font-bold text-gray-900">睡眠ポッド</h2>
+                        <p className="text-sm text-gray-600 mt-1">仙台エリアで利用可能</p>
+                    </div>
 
-export default DreamPodApp;
+                    <div className="px-6 py-4">
+                        {/* フィルター */}
+                        <div className="flex items-center space-x-2 mb-6 overflow-x-auto pb-2">
+                            <button className="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-medium whitespace-nowrap">
+                                すべて
+                            </button>
+                            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors">
+                                空き有り
+                            </button>
+                            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors">
+                                駅近
+                            </button>
+                            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors">
+                                高評価
+                            </button>
+                        </div>
+
+                        {/* ポッドリスト */}
+                        <div className="space-y-4">
+                            {pods.map((pod, index) => (
+                                <div
+                                    key={pod.id}
+                                    className="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                                    style={{
+                                        animationDelay: `${index * 100}ms`,
+                                        animation: 'slideInUp 0.5s ease-out forwards'
+                                    }}
+                                    onClick={() => setSelectedPod(pod)}
+                                >
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div>
+                                            <h3 className="font-semibold text-gray-900 text-lg">{pod.name}</h3>
+                                            <p className="text-sm text-gray-600 mt-1 flex items-center">
+                                                <Icon icon={MapPin} className="w-3 h-3 mr-1" />
+                                                {pod.address}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="flex items-center text-yellow-500">
+                                                <Icon icon={Star} className="w-4 h-4 fill-current" />
+                                                <span className="ml-1 text-sm font-medium text-gray-900">{pod.rating}</span>
+                                            </div>
+                                            <p className="text-sm text-gray-600 mt-1">{pod.distance}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="flex items-center">
+                                                <Icon icon={Battery} className={`w-5 h-5 ${pod.available > 0 ? 'text-green-500' : 'text-red-500'}`} />
+                                                <span className="ml-2 text-sm font-medium">
+                                                    {pod.available}/{pod.total} 空き
+                                                </span>
+                                            </div>
+                                            <div className="text-sm font-medium text-purple-600">
+                                                {pod.price}
+                                            </div>
+                                        </div>
+                                        <button className="px-4 py-2 bg-purple-500 text-white rounded-xl text-sm font-medium hover:bg-purple-600 transition-colors">
+                                            予約する
+                                        </button>
+                                    </div>
+
+                                    {/* 空き状況バー */}
+                                    <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
+                                            style={{ width: `${(pod.available / pod.total) * 100}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const DataTab = () => (
+                <div className="min-h-screen pb-20">
+                    <div className="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 py-4 border-b border-gray-100">
+                        <h2 className="text-2xl font-bold text-gray-900">睡眠データ</h2>
+                        <p className="text-sm text-gray-600 mt-1">詳細な分析とトレンド</p>
+                    </div>
+
+                    <div className="px-6 py-4">
+                        {/* 週間サマリー */}
+                        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-5 mb-6">
+                            <h3 className="font-semibold text-gray-900 mb-4">週間サマリー</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-gray-600">平均睡眠時間</p>
+                                    <p className="text-2xl font-bold text-gray-900">7h 15m</p>
+                                    <p className="text-xs text-green-600 mt-1">+12分 先週比</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">平均スコア</p>
+                                    <p className="text-2xl font-bold text-gray-900">82</p>
+                                    <p className="text-xs text-green-600 mt-1">+3 先週比</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 睡眠グラフ */}
+                        <div className="bg-white rounded-2xl p-5 shadow-lg mb-6">
+                            <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                                <Icon icon={BarChart3} className="w-5 h-5 mr-2 text-purple-500" />
+                                今週の睡眠時間
+                            </h3>
+                            <div className="space-y-3">
+                                {['月', '火', '水', '木', '金', '土', '日'].map((day, index) => {
+                                    const hours = Math.random() * 3 + 6;
+                                    return (
+                                        <div key={day} className="flex items-center space-x-3">
+                                            <span className="text-sm font-medium text-gray-600 w-8">{day}</span>
+                                            <div className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden relative">
+                                                <div 
+                                                    className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000"
+                                                    style={{ 
+                                                        width: `${(hours / 10) * 100}%`,
+                                                        animationDelay: `${index * 100}ms`,
+                                                        animation: 'slideInLeft 0.8s ease-out forwards'
+                                                    }}
+                                                />
+                                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs font-medium text-gray-700">
+                                                    {hours.toFixed(1)}h
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* 睡眠の質の内訳 */}
+                        <div className="bg-white rounded-2xl p-5 shadow-lg">
+                            <h3 className="font-semibold text-gray-900 mb-4">睡眠ステージ分析</h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-medium text-gray-700">深い睡眠</span>
+                                        <span className="text-sm font-medium text-purple-600">28%</span>
+                                    </div>
+                                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                                        <div className="h-full bg-purple-500 rounded-full" style={{ width: '28%' }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-medium text-gray-700">レム睡眠</span>
+                                        <span className="text-sm font-medium text-blue-600">22%</span>
+                                    </div>
+                                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                                        <div className="h-full bg-blue-500 rounded-full" style={{ width: '22%' }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-medium text-gray-700">浅い睡眠</span>
+                                        <span className="text-sm font-medium text-pink-600">50%</span>
+                                    </div>
+                                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                                        <div className="h-full bg-pink-500 rounded-full" style={{ width: '50%' }} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const FeedTab = () => (
+                <div className="min-h-screen pb-20">
+                    <div className="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 py-4 border-b border-gray-100">
+                        <h2 className="text-2xl font-bold text-gray-900">睡眠フィード</h2>
+                        <p className="text-sm text-gray-600 mt-1">最新の記事とヒント</p>
+                    </div>
+
+                    <div className="px-6 py-4">
+                        {/* カテゴリータブ */}
+                        <div className="flex items-center space-x-2 mb-6 overflow-x-auto pb-2">
+                            <button className="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-medium whitespace-nowrap">
+                                すべて
+                            </button>
+                            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                サイエンス
+                            </button>
+                            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                ライフスタイル
+                            </button>
+                            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                トレンド
+                            </button>
+                        </div>
+
+                        {/* 記事リスト */}
+                        <div className="space-y-4">
+                            {[...articles, 
+                                { id: 4, title: '睡眠と運動の関係性', category: 'サイエンス', readTime: '6分', image: '🏃' },
+                                { id: 5, title: '理想的な寝室環境の作り方', category: 'ライフスタイル', readTime: '4分', image: '🏠' },
+                                { id: 6, title: '睡眠不足が与える経済的影響', category: 'ビジネス', readTime: '7分', image: '💰' }
+                            ].map((article, index) => (
+                                <div
+                                    key={article.id}
+                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                                    style={{
+                                        animationDelay: `${index * 100}ms`,
+                                        animation: 'slideInUp 0.5s ease-out forwards'
+                                    }}
+                                >
+                                    <div className="h-32 bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center text-5xl">
+                                        {article.image}
+                                    </div>
+                                    <div className="p-5">
+                                        <div className="flex items-start justify-between mb-2">
+                                            <h3 className="font-semibold text-gray-900 text-lg flex-1">{article.title}</h3>
+                                            {article.sponsored && (
+                                                <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-600 text-xs font-medium rounded-full">
+                                                    広告
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center space-x-3 text-sm text-gray-500">
+                                            <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">{article.category}</span>
+                                            <span>{article.readTime}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const renderContent = () => {
+                switch (activeTab) {
+                    case 'home': return <HomeTab />;
+                    case 'pods': return <PodsTab />;
+                    case 'data': return <DataTab />;
+                    case 'feed': return <FeedTab />;
+                    default: return <HomeTab />;
+                }
+            };
+
+            return (
+                <div className="bg-gray-50 min-h-screen font-sans">
+                    {renderContent()}
+
+                    {/* ボトムナビゲーション */}
+                    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+                        <div className="flex items-center justify-around py-2">
+                            <button
+                                onClick={() => setActiveTab('home')}
+                                className={`flex flex-col items-center p-2 transition-all duration-300 ${
+                                    activeTab === 'home' ? 'text-purple-500' : 'text-gray-400'
+                                }`}
+                            >
+                                <Icon icon={Moon} className="w-6 h-6" />
+                                <span className="text-xs mt-1">ホーム</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('pods')}
+                                className={`flex flex-col items-center p-2 transition-all duration-300 ${
+                                    activeTab === 'pods' ? 'text-purple-500' : 'text-gray-400'
+                                }`}
+                            >
+                                <Icon icon={MapPin} className="w-6 h-6" />
+                                <span className="text-xs mt-1">ポッド</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('data')}
+                                className={`flex flex-col items-center p-2 transition-all duration-300 ${
+                                    activeTab === 'data' ? 'text-purple-500' : 'text-gray-400'
+                                }`}
+                            >
+                                <Icon icon={BarChart3} className="w-6 h-6" />
+                                <span className="text-xs mt-1">データ</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('feed')}
+                                className={`flex flex-col items-center p-2 transition-all duration-300 ${
+                                    activeTab === 'feed' ? 'text-purple-500' : 'text-gray-400'
+                                }`}
+                            >
+                                <Icon icon={BookOpen} className="w-6 h-6" />
+                                <span className="text-xs mt-1">フィード</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* ポッド詳細モーダル */}
+                    {selectedPod && (
+                        <div 
+                            className="fixed inset-0 bg-black/50 z-50 flex items-end"
+                            onClick={() => setSelectedPod(null)}
+                        >
+                            <div 
+                                className="bg-white rounded-t-3xl p-6 w-full max-h-[80vh] overflow-y-auto"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6" />
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedPod.name}</h3>
+                                <p className="text-gray-600 mb-4">{selectedPod.address}</p>
+                                
+                                <div className="grid grid-cols-3 gap-4 mb-6">
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-purple-500">{selectedPod.available}</div>
+                                        <div className="text-sm text-gray-600">空きポッド</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-gray-900">{selectedPod.rating}</div>
+                                        <div className="text-sm text-gray-600">評価</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-gray-900">{selectedPod.price}</div>
+                                        <div className="text-sm text-gray-600">料金</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4 mb-6">
+                                    <div>
+                                        <h4 className="font-semibold text-gray-900 mb-2">設備</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {['快眠マットレス', 'ノイズキャンセリング', 'アロマセラピー', '温度調整', 'Wi-Fi'].map(facility => (
+                                                <span key={facility} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                                                    {facility}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 className="font-semibold text-gray-900 mb-2">営業時間</h4>
+                                        <p className="text-gray-600">24時間営業</p>
+                                    </div>
+                                </div>
+
+                                <button className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg hover:shadow-lg transition-all duration-300">
+                                    今すぐ予約する
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // React 18のルートAPIを使用
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<DreamPodApp />);
+    </script>
+</body>
+</html>
