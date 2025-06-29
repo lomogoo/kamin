@@ -47,6 +47,10 @@
                 <span class="tab-icon">📚</span>
                 <span>記事フィード</span>
             </button>
+            <button class="tab-btn" data-tab="membership-page">
+                <span class="tab-icon">👤</span>
+                <span>会員ページ</span>
+            </button>
         </nav>
 
         <main class="main-content">
@@ -109,6 +113,15 @@
                 <div class="article-grid" id="articleGrid">
                     </div>
             </section>
+            
+            <section class="tab-content" id="membership-page">
+                <div class="content-header">
+                    <h2>会員ページ</h2>
+                    <p>会員情報と便利な機能をご利用いただけます</p>
+                </div>
+                <div id="membershipContent">
+                    </div>
+            </section>
         </main>
     </div>
 
@@ -136,6 +149,7 @@
                 <button class="modal-close" id="closeArticleModal">&times;</button>
             </div>
             <div class="modal-body">
+                <img id="articleModalImage" src="" alt="記事ヘッダー画像" class="article-modal-header-image">
                 <div class="article-category" id="articleModalCategory"></div>
                 <div class="article-content" id="articleModalContent"></div>
             </div>
