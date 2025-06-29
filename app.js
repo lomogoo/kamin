@@ -1,7 +1,7 @@
 // アプリケーションデータ
 const appData = {
   "user_profile": {
-    "name": "佐藤 優奈",
+    "name": "吉田　陸人",
     "plan": "プレミアムプラン",
     "member_since": "2024-10-01",
     "member_id": "KMN-20241001-001" // バーコード生成用のID
@@ -153,12 +153,18 @@ function renderAllContent() {
 }
 
 function setupModals() {
-    document.getElementById('subscriptionBtn').addEventListener('click', () => openModal('subscriptionModal'));
+    const subscriptionBtn = document.getElementById('subscriptionBtn');
+    if (subscriptionBtn) {
+        subscriptionBtn.addEventListener('click', () => openModal('subscriptionModal'));
+    }
 
     document.querySelectorAll('.modal-close').forEach(button => {
         const modalId = button.getAttribute('data-modal-id');
         if(modalId) {
-            button.addEventListener('click', () => closeModal(modalId));
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeModal(modalId);
+            });
         }
     });
 
@@ -200,14 +206,19 @@ function setupTabNavigation() {
 
 function switchTab(targetTab) {
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-tab="${targetTab}"]`).classList.add('active');
-    
     tabContents.forEach(content => content.classList.remove('active'));
-    document.getElementById(targetTab).classList.add('active');
+    
+    const activeTabButton = document.querySelector(`[data-tab="${targetTab}"]`);
+    const activeTabContent = document.getElementById(targetTab);
+
+    if (activeTabButton) activeTabButton.classList.add('active');
+    if (activeTabContent) activeTabContent.classList.add('active');
 }
 
 function reservePod(podType, area, price) {
     const modalBody = document.getElementById('reservationModalBody');
+    if (!modalBody) return;
+
     modalBody.innerHTML = `
         <div class="reservation-details">
             <p><strong>施設:</strong> ${area}</p>
@@ -230,22 +241,27 @@ function reservePod(podType, area, price) {
 
     const timeSelect = modalBody.querySelector('#reservation-time');
     const priceValue = modalBody.querySelector('#reservation-price-value');
+    const confirmBtn = modalBody.querySelector('#confirm-reservation-btn');
     const basePricePer60Min = price;
 
-    timeSelect.addEventListener('change', () => {
-        const selectedTime = parseInt(timeSelect.value, 10);
-        const newPrice = (basePricePer60Min / 60) * selectedTime;
-        priceValue.textContent = `¥${newPrice.toLocaleString()}`;
-    });
+    if (timeSelect && priceValue) {
+        timeSelect.addEventListener('change', () => {
+            const selectedTime = parseInt(timeSelect.value, 10);
+            const newPrice = (basePricePer60Min / 60) * selectedTime;
+            priceValue.textContent = `¥${newPrice.toLocaleString()}`;
+        });
+    }
 
-    modalBody.querySelector('#confirm-reservation-btn').addEventListener('click', () => {
-        showLoading();
-        setTimeout(() => {
-            hideLoading();
-            closeModal('reservationModal');
-            alert(`${area}の${podType}の予約が完了しました！`);
-        }, 1500);
-    });
+    if(confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                closeModal('reservationModal');
+                alert(`${area}の${podType}の予約が完了しました！`);
+            }, 1500);
+        });
+    }
 
     openModal('reservationModal');
 }
@@ -321,13 +337,15 @@ function renderMembershipPage() {
     `;
     
     try {
-      JsBarcode("#barcode", user.member_id, {
-        format: "CODE128",
-        lineColor: "#000",
-        width: 2,
-        height: 60,
-        displayValue: false
-      });
+      if(typeof JsBarcode === 'function'){
+        JsBarcode("#barcode", user.member_id, {
+          format: "CODE128",
+          lineColor: "#000",
+          width: 2,
+          height: 60,
+          displayValue: false
+        });
+      }
     } catch (e) {
       console.error("Barcode generation failed:", e);
     }
@@ -338,7 +356,7 @@ function openHistoryModal() {
     if(!modalBody) return;
     let content = '<ul class="history-list">';
     if (appData.usage_history.length === 0) {
-        content += '<p>利用履歴はまだありません。</p>';
+        content += '<li><p>利用履歴はまだありません。</p></li>';
     } else {
         appData.usage_history.forEach(item => {
             content += `
@@ -365,7 +383,7 @@ function openCouponModal() {
     if(!modalBody) return;
     let content = '<ul class="coupon-list">';
     if (appData.coupons.length === 0) {
-        content += '<p>現在利用可能なクーポンはありません。</p>';
+        content += '<li><p>現在利用可能なクーポンはありません。</p></li>';
     } else {
         appData.coupons.forEach(item => {
             content += `
@@ -500,16 +518,22 @@ function renderArticleCards() {
 }
 
 function openArticleModal(article) {
-    document.getElementById('articleModalTitle').textContent = article.title;
-    document.getElementById('articleModalImage').src = article.thumbnail;
-    const categoryBadge = document.getElementById('articleModalCategory');
-    categoryBadge.textContent = article.category;
-    categoryBadge.className = 'article-category';
-    if(article.category === 'PR') {
-      categoryBadge.classList.add('pr-badge');
-    }
+    const titleEl = document.getElementById('articleModalTitle');
+    const imageEl = document.getElementById('articleModalImage');
+    const categoryEl = document.getElementById('articleModalCategory');
+    const contentEl = document.getElementById('articleModalContent');
+
+    if (titleEl) titleEl.textContent = article.title;
+    if (imageEl) imageEl.src = article.thumbnail;
+    if (contentEl) contentEl.textContent = article.content;
     
-    document.getElementById('articleModalContent').textContent = article.content;
+    if (categoryEl) {
+        categoryEl.textContent = article.category;
+        categoryEl.className = 'article-category';
+        if(article.category === 'PR') {
+          categoryEl.classList.add('pr-badge');
+        }
+    }
     
     openModal('articleModal');
 }
