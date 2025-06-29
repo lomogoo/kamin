@@ -27,33 +27,33 @@ const appData = {
   ],
   "pod_areas": [
     {
-      "area": "駅前地区",
+      "area": "仙台駅店",
       "pods": [
-        {"type": "コンパクトポッド", "price": 1800, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod1.png"}
+        {"type": "コンパクトポッド", "price": 800, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod1.png"}
       ],
       "utilization": [5, 4, 3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 4],
       "shop_image": "assets/shop1.png"
     },
     {
-      "area": "一番町周辺地区",
+      "area": "一番町店",
       "pods": [
-        {"type": "リラックスポッド", "price": 1200, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod2.png"}
+        {"type": "リラックスポッド", "price": 800, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod2.png"}
       ],
       "utilization": [2, 3, 2, 3, 4, 3, 2, 3, 4, 3, 2, 3, 4],
       "shop_image": "assets/shop2.png"
     },
     {
-      "area": "県庁・市役所周辺地区",
+      "area": "県庁前店",
       "pods": [
-        {"type": "ラグジュアリーポッド", "price": 1500, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod3.png"}
+        {"type": "ラグジュアリーポッド", "price": 1000, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod3.png"}
       ],
       "utilization": [3, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5],
       "shop_image": "assets/shop3.png"
     },
     {
-      "area": "駅東地区",
+      "area": "仙台駅東口店",
       "pods": [
-        {"type": "エグゼクティブポッド", "price": 900, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod4.png"}
+        {"type": "エグゼクティブポッド", "price": 1200, "amenities": ["自然音BGM", "調光ライト", "アロマディフューザー", "高級寝具"], "image": "assets/pod4.png"}
       ],
       "utilization": [1, 2, 1, 2, 3, 2, 1, 2, 3, 2, 1, 2, 3],
       "shop_image": "assets/shop4.png"
@@ -470,7 +470,7 @@ function renderPodCards() {
                 <img src="${pod.image}" alt="${pod.type}" class="pod-image" loading="lazy">
                 <div class="pod-info">
                     <div class="pod-type">${pod.type}</div>
-                    <div class="pod-price">¥${pod.price.toLocaleString()}/60分</div>
+                    <div class="pod-price">¥${pod.price.toLocaleString()}/30分~60分</div>
                     <div class="area-location">📍 ${area.area}</div>
                     <ul class="pod-amenities">
                         ${pod.amenities.map(amenity => `<li>${amenity}</li>`).join('')}
