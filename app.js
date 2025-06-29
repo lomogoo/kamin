@@ -4,8 +4,18 @@ const appData = {
     "name": "佐藤 優奈",
     "plan": "プレミアムプラン",
     "member_since": "2024-10-01",
-    "barcode_image": "assets/barcode.svg"
+    "member_id": "KMN-20241001-001" // バーコード生成用のID
   },
+  "usage_history": [
+    {"date": "2025-06-25", "area": "駅前地区", "type": "エグゼクティブポッド", "duration": 60, "cost": 1800},
+    {"date": "2025-06-18", "area": "一番町周辺地区", "type": "リラックスポッド", "duration": 45, "cost": 900},
+    {"date": "2025-06-10", "area": "駅前地区", "type": "エグゼクティブポッド", "duration": 90, "cost": 2700}
+  ],
+  "coupons": [
+    {"title": "【プレミアム限定】ポッド利用料20%OFF", "description": "すべてのポッドでご利用いただける割引クーポンです。", "expiry": "2025-07-31"},
+    {"title": "【雨の日限定】30分延長無料クーポン", "description": "雨の日にご予約いただくと、30分の延長料金が無料になります。", "expiry": "2025-08-31"},
+    {"title": "【新規様歓迎】初回利用500円OFF", "description": "初めてのご利用に限り、会計から500円割引いたします。", "expiry": "2025-12-31"}
+  ],
   "sleep_data": [
     {"date": "2025-06-01", "sleep_hours": 7.5, "quality_score": 85, "deep_sleep": 25, "rem_sleep": 22},
     {"date": "2025-06-02", "sleep_hours": 6.8, "quality_score": 78, "deep_sleep": 22, "rem_sleep": 20},
@@ -112,39 +122,28 @@ const appData = {
 // DOM要素の取得
 const tabButtons = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
-const subscriptionBtn = document.getElementById('subscriptionBtn');
-const subscriptionModal = document.getElementById('subscriptionModal');
-const closeSubscriptionModal = document.getElementById('closeSubscriptionModal');
-const articleModal = document.getElementById('articleModal');
-const closeArticleModal = document.getElementById('closeArticleModal');
 const loadingOverlay = document.getElementById('loadingOverlay');
-
-// チャート変数
 let sleepChart = null;
 
 // 初期化
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     showLoading();
-    
     setTimeout(() => {
         initializeApp();
         hideLoading();
     }, 1500);
 });
 
-// ローディング表示/非表示
-function showLoading() {
-    loadingOverlay.classList.add('active');
-}
+function showLoading() { loadingOverlay.classList.add('active'); }
+function hideLoading() { loadingOverlay.classList.remove('active'); }
 
-function hideLoading() {
-    loadingOverlay.classList.remove('active');
-}
-
-// アプリ初期化
 function initializeApp() {
     setupTabNavigation();
     setupModals();
+    renderAllContent();
+}
+
+function renderAllContent() {
     renderSleepChart();
     renderPodCards();
     renderUsageCards();
@@ -153,71 +152,243 @@ function initializeApp() {
     renderMembershipPage();
 }
 
-// タブナビゲーション設定
-function setupTabNavigation() {
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetTab = button.getAttribute('data-tab');
-            switchTab(targetTab);
-            
-            // ボタンアニメーション
-            button.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                button.style.transform = '';
-            }, 150);
-        });
-    });
-}
-
-// タブ切り替え
-function switchTab(targetTab) {
-    // アクティブタブボタンの更新
-    tabButtons.forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-tab="${targetTab}"]`).classList.add('active');
-    
-    // タブコンテンツの更新
-    tabContents.forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    setTimeout(() => {
-        document.getElementById(targetTab).classList.add('active');
-    }, 150);
-}
-
-// モーダル設定
 function setupModals() {
-    // サブスクリプションモーダル
-    subscriptionBtn.addEventListener('click', () => {
-        subscriptionModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    document.getElementById('subscriptionBtn').addEventListener('click', () => openModal('subscriptionModal'));
+
+    document.querySelectorAll('.modal-close').forEach(button => {
+        const modalId = button.getAttribute('data-modal-id');
+        if(modalId) {
+            button.addEventListener('click', () => closeModal(modalId));
+        }
     });
-    
-    closeSubscriptionModal.addEventListener('click', () => {
-        subscriptionModal.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-    
-    // 記事モーダル
-    closeArticleModal.addEventListener('click', () => {
-        articleModal.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-    
-    // モーダル外クリックで閉じる
-    [subscriptionModal, articleModal].forEach(modal => {
+
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
+                closeModal(modal.id);
             }
         });
     });
 }
 
-// 睡眠チャート描画
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if(modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if(modal) {
+        modal.classList.remove('active');
+    }
+    if (!document.querySelector('.modal-overlay.active')) {
+        document.body.style.overflow = '';
+    }
+}
+
+function setupTabNavigation() {
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+            switchTab(targetTab);
+        });
+    });
+}
+
+function switchTab(targetTab) {
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-tab="${targetTab}"]`).classList.add('active');
+    
+    tabContents.forEach(content => content.classList.remove('active'));
+    document.getElementById(targetTab).classList.add('active');
+}
+
+function reservePod(podType, area, price) {
+    const modalBody = document.getElementById('reservationModalBody');
+    modalBody.innerHTML = `
+        <div class="reservation-details">
+            <p><strong>施設:</strong> ${area}</p>
+            <p><strong>ポッドタイプ:</strong> ${podType}</p>
+        </div>
+        <div class="form-group">
+            <label for="reservation-time" class="form-label">利用時間 (分)</label>
+            <select id="reservation-time" class="form-control">
+                <option value="30">30分</option>
+                <option value="60" selected>60分</option>
+                <option value="90">90分</option>
+                <option value="120">120分</option>
+            </select>
+        </div>
+        <div class="reservation-price">
+            <p>料金: <span id="reservation-price-value">¥${price.toLocaleString()}</span></p>
+        </div>
+        <button class="btn btn--primary btn--full-width" id="confirm-reservation-btn">この内容で予約を確定する</button>
+    `;
+
+    const timeSelect = modalBody.querySelector('#reservation-time');
+    const priceValue = modalBody.querySelector('#reservation-price-value');
+    const basePricePer60Min = price;
+
+    timeSelect.addEventListener('change', () => {
+        const selectedTime = parseInt(timeSelect.value, 10);
+        const newPrice = (basePricePer60Min / 60) * selectedTime;
+        priceValue.textContent = `¥${newPrice.toLocaleString()}`;
+    });
+
+    modalBody.querySelector('#confirm-reservation-btn').addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+            hideLoading();
+            closeModal('reservationModal');
+            alert(`${area}の${podType}の予約が完了しました！`);
+        }, 1500);
+    });
+
+    openModal('reservationModal');
+}
+
+function renderUsageCards() {
+    const usageGrid = document.getElementById('usageGrid');
+    if(!usageGrid) return;
+    usageGrid.innerHTML = '';
+    
+    appData.pod_areas.forEach((area, index) => {
+        const usageCard = document.createElement('div');
+        usageCard.className = 'usage-card';
+        usageCard.style.setProperty('--delay', `${index * 0.1}s`);
+        
+        const podStatusHTML = Array.from({length: 6}, (_, i) => {
+            const isOccupied = area.utilization[i] > 3;
+            return `<div class="pod-status ${isOccupied ? 'occupied' : 'available'}" title="${isOccupied ? '使用中' : '空室'}">${i + 1}</div>`;
+        }).join('');
+        
+        usageCard.innerHTML = `
+            <div class="usage-info">
+                <div class="area-name">${area.area}</div>
+                <img src="${area.shop_image}" alt="${area.area}の内装" class="usage-card-image" loading="lazy">
+                <div class="pod-status-grid">
+                    ${podStatusHTML}
+                </div>
+            </div>
+        `;
+        
+        usageGrid.appendChild(usageCard);
+    });
+}
+
+function renderMembershipPage() {
+    const membershipContent = document.getElementById('membershipContent');
+    if(!membershipContent) return;
+    const user = appData.user_profile;
+
+    membershipContent.innerHTML = `
+        <div class="membership-barcode-container">
+            <p>チェックイン時にご提示ください</p>
+            <svg id="barcode"></svg>
+        </div>
+        <div class="profile-card">
+            <div class="profile-info">
+                <div class="profile-name">${user.name}</div>
+                <div class="profile-plan">${user.plan}</div>
+            </div>
+            <div class="profile-meta">会員登録日: ${user.member_since}</div>
+        </div>
+        <div class="membership-grid">
+            <div class="membership-grid-item" onclick="openHistoryModal()">
+                <div class="membership-item-icon">📜</div>
+                <h3>利用履歴</h3>
+                <p>過去の利用履歴を確認</p>
+            </div>
+            <div class="membership-grid-item" onclick="openCouponModal()">
+                <div class="membership-item-icon">🎟️</div>
+                <h3>特典クーポン</h3>
+                <p>限定クーポンをチェック</p>
+            </div>
+            <div class="membership-grid-item" onclick="openModal('settingsModal')">
+                <div class="membership-item-icon">⚙️</div>
+                <h3>設定</h3>
+                <p>アカウント情報を編集</p>
+            </div>
+            <div class="membership-grid-item" onclick="openModal('helpModal')">
+                <div class="membership-item-icon">❓</div>
+                <h3>ヘルプ</h3>
+                <p>よくある質問はこちら</p>
+            </div>
+        </div>
+    `;
+    
+    try {
+      JsBarcode("#barcode", user.member_id, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 2,
+        height: 60,
+        displayValue: false
+      });
+    } catch (e) {
+      console.error("Barcode generation failed:", e);
+    }
+}
+
+function openHistoryModal() {
+    const modalBody = document.getElementById('historyModalBody');
+    if(!modalBody) return;
+    let content = '<ul class="history-list">';
+    if (appData.usage_history.length === 0) {
+        content += '<p>利用履歴はまだありません。</p>';
+    } else {
+        appData.usage_history.forEach(item => {
+            content += `
+                <li class="history-item">
+                    <div class="history-item-main">
+                        <span class="history-date">${item.date}</span>
+                        <span class="history-area">${item.area}</span>
+                    </div>
+                    <div class="history-item-sub">
+                        <span>${item.type} (${item.duration}分)</span>
+                        <span class="history-cost">¥${item.cost.toLocaleString()}</span>
+                    </div>
+                </li>
+            `;
+        });
+    }
+    content += '</ul>';
+    modalBody.innerHTML = content;
+    openModal('historyModal');
+}
+
+function openCouponModal() {
+    const modalBody = document.getElementById('couponModalBody');
+    if(!modalBody) return;
+    let content = '<ul class="coupon-list">';
+    if (appData.coupons.length === 0) {
+        content += '<p>現在利用可能なクーポンはありません。</p>';
+    } else {
+        appData.coupons.forEach(item => {
+            content += `
+                <li class="coupon-item">
+                    <div class="coupon-icon">🎟️</div>
+                    <div class="coupon-details">
+                        <h4 class="coupon-title">${item.title}</h4>
+                        <p class="coupon-description">${item.description}</p>
+                        <p class="coupon-expiry">有効期限: ${item.expiry}</p>
+                    </div>
+                    <button class="btn btn--sm btn--primary">使用する</button>
+                </li>
+            `;
+        });
+    }
+    content += '</ul>';
+    modalBody.innerHTML = content;
+    openModal('couponModal');
+}
+
 function renderSleepChart() {
-    const ctx = document.getElementById('sleepChart').getContext('2d');
+    const ctx = document.getElementById('sleepChart')?.getContext('2d');
+    if (!ctx) return;
     
     const chartData = {
         labels: appData.sleep_data.map(d => {
@@ -230,39 +401,21 @@ function renderSleepChart() {
                 data: appData.sleep_data.map(d => d.sleep_hours),
                 borderColor: '#4ECDC4',
                 backgroundColor: 'rgba(78, 205, 196, 0.1)',
-                borderWidth: 4,
-                pointRadius: 6,
-                pointBackgroundColor: '#4ECDC4',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                fill: true,
-                tension: 0.4
+                borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#4ECDC4', pointBorderColor: '#ffffff', pointBorderWidth: 2, fill: true, tension: 0.4
             },
             {
                 label: '睡眠の質（点）',
-                data: appData.sleep_data.map(d => d.quality_score / 10), // スケール調整
+                data: appData.sleep_data.map(d => d.quality_score / 10),
                 borderColor: '#FF6B6B',
                 backgroundColor: 'rgba(255, 107, 107, 0.1)',
-                borderWidth: 4,
-                pointRadius: 6,
-                pointBackgroundColor: '#FF6B6B',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                fill: true,
-                tension: 0.4
+                borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#FF6B6B', pointBorderColor: '#ffffff', pointBorderWidth: 2, fill: true, tension: 0.4
             },
             {
                 label: '深い眠り（%）',
-                data: appData.sleep_data.map(d => d.deep_sleep / 4), // スケール調整
+                data: appData.sleep_data.map(d => d.deep_sleep / 4),
                 borderColor: '#9B59B6',
                 backgroundColor: 'rgba(155, 89, 182, 0.1)',
-                borderWidth: 4,
-                pointRadius: 6,
-                pointBackgroundColor: '#9B59B6',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                fill: true,
-                tension: 0.4
+                borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#9B59B6', pointBorderColor: '#ffffff', pointBorderWidth: 2, fill: true, tension: 0.4
             }
         ]
     };
@@ -271,64 +424,22 @@ function renderSleepChart() {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: {
-                position: 'top',
-                labels: {
-                    color: 'white',
-                    font: {
-                        size: 14,
-                        family: 'var(--font-family-base)'
-                    },
-                    usePointStyle: true,
-                    pointStyle: 'circle'
-                }
-            }
+            legend: { position: 'top', labels: { color: 'white', font: { size: 14, family: 'var(--font-family-base)' }, usePointStyle: true, pointStyle: 'circle' } }
         },
         scales: {
-            x: {
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: 'rgba(255, 255, 255, 0.2)'
-                },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    font: {
-                        size: 12
-                    }
-                }
-            },
-            y: {
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: 'rgba(255, 255, 255, 0.2)'
-                },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    font: {
-                        size: 12
-                    }
-                },
-                beginAtZero: true,
-                max: 10
-            }
+            x: { grid: { color: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }, ticks: { color: 'rgba(255, 255, 255, 0.8)', font: { size: 12 } } },
+            y: { grid: { color: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }, ticks: { color: 'rgba(255, 255, 255, 0.8)', font: { size: 12 } }, beginAtZero: true, max: 10 }
         },
-        animation: {
-            duration: 2000,
-            easing: 'easeInOutQuart'
-        }
+        animation: { duration: 2000, easing: 'easeInOutQuart' }
     };
     
     if(sleepChart) sleepChart.destroy();
-    sleepChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: chartOptions
-    });
+    sleepChart = new Chart(ctx, { type: 'line', data: chartData, options: chartOptions });
 }
 
-// ポッドカード描画
 function renderPodCards() {
     const podGrid = document.getElementById('podGrid');
+    if(!podGrid) return;
     podGrid.innerHTML = '';
     
     appData.pod_areas.forEach((area, index) => {
@@ -346,7 +457,7 @@ function renderPodCards() {
                     <ul class="pod-amenities">
                         ${pod.amenities.map(amenity => `<li>${amenity}</li>`).join('')}
                     </ul>
-                    <button class="reserve-btn" onclick="reservePod('${pod.type}', '${area.area}')">
+                    <button class="reserve-btn" onclick="reservePod('${pod.type}', '${area.area}', ${pod.price})">
                         予約する
                     </button>
                 </div>
@@ -357,56 +468,9 @@ function renderPodCards() {
     });
 }
 
-// ポッド予約処理
-function reservePod(podType, area) {
-    showLoading();
-    
-    setTimeout(() => {
-        hideLoading();
-        alert(`${area}の${podType}の予約を受け付けました！\n確認メールをお送りします。`);
-    }, 1500);
-}
-
-// 利用状況カード描画
-function renderUsageCards() {
-    const usageGrid = document.getElementById('usageGrid');
-    usageGrid.innerHTML = '';
-    
-    appData.pod_areas.forEach((area, index) => {
-        const usageCard = document.createElement('div');
-        usageCard.className = 'usage-card';
-        usageCard.style.setProperty('--delay', `${index * 0.1}s`);
-        
-        const podStatusHTML = Array.from({length: 6}, (_, i) => {
-            const isOccupied = area.utilization[i] > 3;
-            const statusClass = isOccupied ? 'occupied' : 'available';
-            const statusText = isOccupied ? '使用中' : '空室';
-            return `<div class="pod-status ${statusClass}" title="${statusText}">${i + 1}</div>`;
-        }).join('');
-        
-        usageCard.innerHTML = `
-            <div class="usage-info">
-                <div class="area-name">${area.area}</div>
-                <img src="${area.shop_image}" alt="${area.area}の内装" class="usage-card-image" loading="lazy">
-                <div class="pod-status-grid">
-                    ${podStatusHTML}
-                </div>
-                <div class="usage-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">現在の利用率:</span>
-                        <span class="stat-value">${Math.round((area.utilization.filter(u => u > 3).length / 6) * 100)}%</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        usageGrid.appendChild(usageCard);
-    });
-}
-
-// 記事カード描画
 function renderArticleCards() {
     const articleGrid = document.getElementById('articleGrid');
+    if(!articleGrid) return;
     articleGrid.innerHTML = '';
     
     appData.articles.forEach((article, index) => {
@@ -429,15 +493,12 @@ function renderArticleCards() {
             </div>
         `;
         
-        articleCard.addEventListener('click', () => {
-            openArticleModal(article);
-        });
+        articleCard.addEventListener('click', () => openArticleModal(article));
         
         articleGrid.appendChild(articleCard);
     });
 }
 
-// 記事モーダル開く
 function openArticleModal(article) {
     document.getElementById('articleModalTitle').textContent = article.title;
     document.getElementById('articleModalImage').src = article.thumbnail;
@@ -450,13 +511,12 @@ function openArticleModal(article) {
     
     document.getElementById('articleModalContent').textContent = article.content;
     
-    articleModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    openModal('articleModal');
 }
 
-// サブスクリプションプラン描画
 function renderSubscriptionPlans() {
     const plansGrid = document.getElementById('plansGrid');
+    if(!plansGrid) return;
     plansGrid.innerHTML = '';
     
     appData.subscription_plans.forEach((plan, index) => {
@@ -495,53 +555,6 @@ function renderSubscriptionPlans() {
     });
 }
 
-// 会員ページ描画
-function renderMembershipPage() {
-    const membershipContent = document.getElementById('membershipContent');
-    const user = appData.user_profile;
-
-    membershipContent.innerHTML = `
-        <div class="membership-barcode-container">
-            <p>チェックイン時にご提示ください</p>
-            <img src="${user.barcode_image}" alt="会員バーコード" class="membership-barcode">
-        </div>
-        
-        <div class="profile-card">
-            <div class="profile-info">
-                <div class="profile-name">${user.name}</div>
-                <div class="profile-plan">${user.plan}</div>
-            </div>
-            <div class="profile-meta">
-                会員登録日: ${user.member_since}
-            </div>
-        </div>
-        
-        <div class="membership-grid">
-            <div class="membership-grid-item">
-                <div class="membership-item-icon">📜</div>
-                <h3>利用履歴</h3>
-                <p>過去の利用履歴を確認</p>
-            </div>
-            <div class="membership-grid-item">
-                <div class="membership-item-icon">🎟️</div>
-                <h3>特典クーポン</h3>
-                <p>限定クーポンをチェック</p>
-            </div>
-            <div class="membership-grid-item">
-                <div class="membership-item-icon">⚙️</div>
-                <h3>設定</h3>
-                <p>アカウント情報を編集</p>
-            </div>
-            <div class="membership-grid-item">
-                <div class="membership-item-icon">❓</div>
-                <h3>ヘルプ</h3>
-                <p>よくある質問はこちら</p>
-            </div>
-        </div>
-    `;
-}
-
-// プラン選択処理
 function selectPlan(planName) {
     if (planName === 'ベーシックプラン') {
         alert('現在ベーシックプランをご利用中です。');
@@ -552,27 +565,17 @@ function selectPlan(planName) {
     
     setTimeout(() => {
         hideLoading();
-        subscriptionModal.classList.remove('active');
-        document.body.style.overflow = '';
+        closeModal('subscriptionModal');
         alert(`${planName}の7日間無料トライアルを開始しました！\nアップグレードが完了しました。`);
     }, 2000);
 }
 
-// キーボードナビゲーション
 document.addEventListener('keydown', (e) => {
-    // Escapeキーでモーダルを閉じる
     if (e.key === 'Escape') {
-        if (subscriptionModal.classList.contains('active')) {
-            subscriptionModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        if (articleModal.classList.contains('active')) {
-            articleModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+            closeModal(modal.id);
+        });
     }
-    
-    // 数字キーでタブ切り替え
     if (e.key >= '1' && e.key <= '5') {
         e.preventDefault();
         const tabIndex = parseInt(e.key) - 1;
@@ -583,18 +586,8 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// リサイズ時のチャート調整
 window.addEventListener('resize', () => {
     if (sleepChart) {
         sleepChart.resize();
     }
 });
-
-// (以下、その他の補助関数は変更なし)
-
-// アプリのメタデータ
-const APP_VERSION = '1.1.0';
-const BUILD_DATE = '2025-06-27';
-
-console.log(`🌙 kamin App v${APP_VERSION} (${BUILD_DATE})`);
-console.log('✨ アニメーション豊富な睡眠管理アプリへようこそ！');
