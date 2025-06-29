@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepWell - 睡眠管理アプリ</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 星と雲のアニメーション背景 -->
+    <div class="starry-background">
+        <div class="stars"></div>
+        <div class="clouds">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+        </div>
+    </div>
+
+    <!-- メインアプリ -->
+    <div class="app-container">
+        <!-- ヘッダー -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="title-icon">🌙</span>
+                    SleepWell
+                </h1>
+                <button class="subscription-btn btn--primary" id="subscriptionBtn">
+                    <span>✨ プレミアムプラン</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- タブナビゲーション -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="sleep-data">
+                <span class="tab-icon">📊</span>
+                <span>睡眠データ</span>
+            </button>
+            <button class="tab-btn" data-tab="pod-reservation">
+                <span class="tab-icon">🛏️</span>
+                <span>ポッド予約</span>
+            </button>
+            <button class="tab-btn" data-tab="usage-status">
+                <span class="tab-icon">📍</span>
+                <span>利用状況</span>
+            </button>
+            <button class="tab-btn" data-tab="article-feed">
+                <span class="tab-icon">📚</span>
+                <span>記事フィード</span>
+            </button>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- 睡眠データ分析画面 -->
+            <section class="tab-content active" id="sleep-data">
+                <div class="content-header">
+                    <h2>睡眠データ分析</h2>
+                    <p>過去30日間の睡眠パターンを確認しましょう</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="sleepChart" width="400" height="200"></canvas>
+                </div>
+                <div class="sleep-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">⏰</div>
+                        <div class="metric-info">
+                            <h3>平均睡眠時間</h3>
+                            <span class="metric-value">7.4時間</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">⭐</div>
+                        <div class="metric-info">
+                            <h3>睡眠の質</h3>
+                            <span class="metric-value">85点</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🌙</div>
+                        <div class="metric-info">
+                            <h3>深い眠り</h3>
+                            <span class="metric-value">25%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ポッド予約画面 -->
+            <section class="tab-content" id="pod-reservation">
+                <div class="content-header">
+                    <h2>睡眠ポッド予約</h2>
+                    <p>仙台市内4エリアから最適なポッドを選択してください</p>
+                </div>
+                <div class="pod-grid" id="podGrid">
+                    <!-- ポッドカードがJavaScriptで動的に生成されます -->
+                </div>
+            </section>
+
+            <!-- 利用状況表示画面 -->
+            <section class="tab-content" id="usage-status">
+                <div class="content-header">
+                    <h2>リアルタイム利用状況</h2>
+                    <p>各エリアの現在の利用状況をご確認ください</p>
+                </div>
+                <div class="usage-grid" id="usageGrid">
+                    <!-- 利用状況カードがJavaScriptで動的に生成されます -->
+                </div>
+            </section>
+
+            <!-- 記事フィード画面 -->
+            <section class="tab-content" id="article-feed">
+                <div class="content-header">
+                    <h2>睡眠改善記事</h2>
+                    <p>専門家が厳選した睡眠とヘルスケアに関する記事</p>
+                </div>
+                <div class="article-grid" id="articleGrid">
+                    <!-- 記事カードがJavaScriptで動的に生成されます -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- サブスクリプションモーダル -->
+    <div class="modal-overlay" id="subscriptionModal">
+        <div class="modal-content subscription-modal">
+            <div class="modal-header">
+                <h2>✨ プレミアムプランに参加</h2>
+                <button class="modal-close" id="closeSubscriptionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="trial-banner">
+                    <span class="trial-icon">🎁</span>
+                    <span>7日間無料トライアル開始</span>
+                </div>
+                <div class="plans-grid" id="plansGrid">
+                    <!-- プランカードがJavaScriptで動的に生成されます -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 記事詳細モーダル -->
+    <div class="modal-overlay" id="articleModal">
+        <div class="modal-content article-modal">
+            <div class="modal-header">
+                <h2 id="articleModalTitle"></h2>
+                <button class="modal-close" id="closeArticleModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="article-category" id="articleModalCategory"></div>
+                <div class="article-content" id="articleModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ローディングアニメーション -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner-circle"></div>
+            <p>データを読み込み中...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
