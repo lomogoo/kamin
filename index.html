@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SleepWell - 睡眠管理アプリ</title>
+    <title>kamin - 睡眠管理アプリ</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- 星と雲のアニメーション背景 -->
     <div class="starry-background">
         <div class="stars"></div>
         <div class="clouds">
@@ -18,14 +17,12 @@
         </div>
     </div>
 
-    <!-- メインアプリ -->
     <div class="app-container">
-        <!-- ヘッダー -->
         <header class="app-header">
             <div class="header-content">
                 <h1 class="app-title">
                     <span class="title-icon">🌙</span>
-                    SleepWell
+                    kamin
                 </h1>
                 <button class="subscription-btn btn--primary" id="subscriptionBtn">
                     <span>✨ プレミアムプラン</span>
@@ -33,7 +30,6 @@
             </div>
         </header>
 
-        <!-- タブナビゲーション -->
         <nav class="tab-navigation">
             <button class="tab-btn active" data-tab="sleep-data">
                 <span class="tab-icon">📊</span>
@@ -53,9 +49,7 @@
             </button>
         </nav>
 
-        <!-- メインコンテンツ -->
         <main class="main-content">
-            <!-- 睡眠データ分析画面 -->
             <section class="tab-content active" id="sleep-data">
                 <div class="content-header">
                     <h2>睡眠データ分析</h2>
@@ -89,42 +83,35 @@
                 </div>
             </section>
 
-            <!-- ポッド予約画面 -->
             <section class="tab-content" id="pod-reservation">
                 <div class="content-header">
                     <h2>睡眠ポッド予約</h2>
                     <p>仙台市内4エリアから最適なポッドを選択してください</p>
                 </div>
                 <div class="pod-grid" id="podGrid">
-                    <!-- ポッドカードがJavaScriptで動的に生成されます -->
-                </div>
+                    </div>
             </section>
 
-            <!-- 利用状況表示画面 -->
             <section class="tab-content" id="usage-status">
                 <div class="content-header">
                     <h2>リアルタイム利用状況</h2>
                     <p>各エリアの現在の利用状況をご確認ください</p>
                 </div>
                 <div class="usage-grid" id="usageGrid">
-                    <!-- 利用状況カードがJavaScriptで動的に生成されます -->
-                </div>
+                    </div>
             </section>
 
-            <!-- 記事フィード画面 -->
             <section class="tab-content" id="article-feed">
                 <div class="content-header">
                     <h2>睡眠改善記事</h2>
                     <p>専門家が厳選した睡眠とヘルスケアに関する記事</p>
                 </div>
                 <div class="article-grid" id="articleGrid">
-                    <!-- 記事カードがJavaScriptで動的に生成されます -->
-                </div>
+                    </div>
             </section>
         </main>
     </div>
 
-    <!-- サブスクリプションモーダル -->
     <div class="modal-overlay" id="subscriptionModal">
         <div class="modal-content subscription-modal">
             <div class="modal-header">
@@ -137,13 +124,11 @@
                     <span>7日間無料トライアル開始</span>
                 </div>
                 <div class="plans-grid" id="plansGrid">
-                    <!-- プランカードがJavaScriptで動的に生成されます -->
-                </div>
+                    </div>
             </div>
         </div>
     </div>
 
-    <!-- 記事詳細モーダル -->
     <div class="modal-overlay" id="articleModal">
         <div class="modal-content article-modal">
             <div class="modal-header">
@@ -157,7 +142,6 @@
         </div>
     </div>
 
-    <!-- ローディングアニメーション -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <div class="spinner-circle"></div>
